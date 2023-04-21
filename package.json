@@ -1,0 +1,17 @@
+{
+  "name": "chifoumi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sandra Hubert",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "colorette": "^2.0.20",
+    "esm": "^3.2.25",
+    "readline-sync": "^1.4.10"
+  }
+}
