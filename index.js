@@ -1,11 +1,3 @@
-const readline = require('readline');
-const { red, green, blue } = require('colorette');
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
 const choixPossibles = ['pierre', 'feuille', 'ciseaux'];
 
 let scoreJoueur = 0;
@@ -16,56 +8,46 @@ function comparer(choixJoueur, choixOrdi) {
   if (choixJoueur === choixOrdi) {
     return 'Egalité !';
   } else if (choixJoueur === 'pierre') {
-    return (choixOrdi === 'ciseaux') ? choixJoueur : choixOrdi;
+    return (choixOrdi === 'ciseaux') ? 'Gagné !' : 'Perdu !';
   } else if (choixJoueur === 'feuille') {
-    return (choixOrdi === 'pierre') ? choixJoueur : choixOrdi;
+    return (choixOrdi === 'pierre') ? 'Gagné !' : 'Perdu !';
   } else if (choixJoueur === 'ciseaux') {
-    return (choixOrdi === 'feuille') ? choixJoueur : choixOrdi;
+    return (choixOrdi === 'feuille') ? 'Gagné !' : 'Perdu !';
   }
 }
 
 function jouer() {
   const choixOrdi = choixPossibles[Math.floor(Math.random() * 3)];
+  const choixJoueur = choixPossibles[Math.floor(Math.random() * 3)];
+  const resultat = comparer(choixJoueur, choixOrdi);
 
-  console.log(`Score : Joueur ${scoreJoueur} - ${scoreOrdi} Ordinateur`);
-  console.log('\n');
-  rl.question('Choisissez-vous pierre, feuille, ou ciseaux ? ', (choixJoueur) => {
-    const resultat = comparer(choixJoueur, choixOrdi);
+  console.log(`Tour ${historique.length + 1}: Vous avez choisi \x1b[33m${choixJoueur}\x1b[0m, l'ordinateur a choisi \x1b[33m${choixOrdi}\x1b[0m, résultat: ${resultat === 'Egalité !' ? '\x1b[33mEgalité !\x1b[0m' : (resultat === 'Gagné !' ? '\x1b[32mGagné !\x1b[0m' : '\x1b[31mPerdu !\x1b[0m')}`);
 
-   
-    console.log(`Score : Joueur ${scoreJoueur} - ${scoreOrdi} Ordinateur`);
-    console.log(`\nVous avez choisi: ${choixJoueur}`);
-    console.log(`L'ordinateur a choisi: ${choixOrdi}`);
-    console.log(`\n${resultat === 'Egalité !' ? red(resultat) : (resultat === choixJoueur ? green('Gagné !') : blue('Perdu !'))}\n`);
-
-    historique.push({
-      choixJoueur,
-      choixOrdi,
-      resultat
-    });
-
-    if (scoreJoueur < 2 && scoreOrdi < 2) {
-      jouer();
-    } else {
-      const message = (scoreOrdi === scoreJoueur) ? 'Égalité !' :
-                      (scoreOrdi > scoreJoueur) ? 'Perdu !' :
-                      'Gagné !';
-      console.log(`\n${message} Votre score: ${scoreJoueur}, ordinateur: ${scoreOrdi}`);
-
-      console.log('\nHistorique des tours :');
-      historique.forEach((tour, index) => {
-        console.log(`Tour ${index + 1}: Vous avez choisi ${tour.choixJoueur}, l'ordinateur a choisi ${tour.choixOrdi}, ${tour.resultat}`);
-      });
-
-      rl.close();
-    }
-
-    if (resultat === choixJoueur) {
-      scoreJoueur++;
-    } else if (resultat !== 'Egalité !') {
-      scoreOrdi++;
-    }
+  historique.push({
+    choixJoueur,
+    choixOrdi,
+    resultat
   });
-}
+
+  if (resultat === 'Gagné !') {
+    scoreJoueur++;
+  } else if (resultat !== 'Egalité !') {
+    scoreOrdi++;
+  }
+
+  if (scoreJoueur < 2 && scoreOrdi < 2) {
+    jouer();
+  } else {
+    const message = (scoreOrdi === scoreJoueur) ? '\x1b[33mÉgalité !\x1b[0m' :
+      (scoreOrdi > scoreJoueur) ? '\x1b[31mPerdu !\x1b[0m' :
+      '\x1b[32mGagné !\x1b[0m';
+    console.log(`\n${message} Votre score: \x1b[36m${scoreJoueur}\x1b[0m, ordinateur: \x1b[36m${scoreOrdi}\x1b[0m`);
+
+    console.log('\nHistorique des tours :');
+        historique.forEach((tour, index) => {
+      console.log(`Tour ${index + 1}: Vous avez choisi \x1b[33m${tour.choixJoueur}\x1b[0m, l'ordinateur a choisi \x1b[33m${tour.choixOrdi}\x1b[0m, résultat: ${tour.resultat === 'Egalité !' ? '\x1b[33mEgalité !\x1b[0m' : `${tour.resultat === tour.choixJoueur ? '\x1b[32m' + tour.choixOrdi + '\x1b[0m, résultat: ' + tour.resultat : '\x1b[31m' + tour.choixOrdi + '\x1b[0m, résultat: ' + tour.resultat}`}`);
+    });
+  }
+} 
 
 jouer();
